@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+
+    <!-- Use this for mobile devices not to mess with scale -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS CDN-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+
+
+
+
+
+    <div id="user-hello">{{ room_name }}</div>
+    <!--Client's textarea -->
+    <textarea id="{{ client_user}}" cols="20" rows="10"></textarea>
+
+    <!--Client's view on other's text areas (Display of other user's textareas)-->
+    {% for user in valid_users %}
+      {% if user != client_user %}
+      <p id="{{ user }}" style="border-style: solid;">{{user}}</p>
+      {% endif %}
+    {% endfor %}
+
+    {{ room_name|json_script:"room-name" }}
+
+
+    <script>
+    //Takes the Document.cookie string and finds value of cookie based on name or key (cname = cookie's key)
+    function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+
+
+
+    const client_panel = document.querySelector("#"+getCookie("USERAUTH"));
+    //EVERY TIME the Client's panel is changed this function runs (change to every 10s in future versions?)
+    client_panel.addEventListener('input', function() {
+    console.log("Client Panel has been edited");
+    console.log(client_panel.value);
+    chatSocket.send(JSON.stringify({
+        'client_panel_content': client_panel.value,
+        'user_id': getCookie("USERAUTH"),
+        'receive_type': 'padlet_update',
+    }));
+
+  });
+
+
+    const roomName = JSON.parse(document.getElementById('room-name').textContent)
+     const chatSocket = new WebSocket(
+     'ws://' +
+     window.location.host +
+     '/ws/padlet/' +
+     roomName +
+     '/'
+     );
+
+     chatSocket.onmessage = function (e) {
+       const data = JSON.parse(e.data);
+       console.log(data)
+       if (data.type == "padlet_update") {
+         if (data.message[0] != getCookie('USERAUTH')) {
+            document.querySelector("#"+data.message[0]).innerHTML = data.message[1]
+
+         };
+       };
+       if (data.type == "init_connect") {
+         console.log("INITIAL CONNECTION HAS BEEN ESTABLISHED")
+         //Previous Padlet data:
+         prev_logs = JSON.parse(data.prev_logs)
+         //Looping thru dictionary to assign values
+         Object.entries(prev_logs).forEach(([key, value]) => {
+          if (key == getCookie("USERAUTH")) {
+            document.querySelector("#"+getCookie("USERAUTH")).value = value;
+          } else {
+            document.querySelector("#"+key).innerHTML = value;
+          }
+        });
+       }
+
+
+
+       //document.querySelector('#user-hello').innerHTML = (data.prev_logs + " " + data.type);
+
+
+     }
+
+    </script>
+
+    <div class="container">
+        <!-- put content here -->
+    </div>
+
+    <!-- Javascript for bootstrap 4, yes including popper js-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
