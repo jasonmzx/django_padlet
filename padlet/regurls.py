@@ -4,4 +4,5 @@ from . import views
 # Padlet regURLS (Regular URLS) are for regular website functionalities (Loging in, About us, etc..)
 urlpatterns = [
     path('', views.home, name='home'),
+    path('mypadlets',views.mypadlets,name='mypadlets')
 ]

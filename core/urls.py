@@ -21,5 +21,7 @@ urlpatterns = [
     #Padlet URLS Are specifically for the padlet application
     path('padlet/',include('padlet.urls')),
     #Padlet regURLS (Regular URLS) are for regular website functionalities (Loging in, About us, etc..)
-    path('',include('padlet.regurls'))
+    path('',include('padlet.regurls')),
+    #Django ALLAUTH Urls here:
+    path('accounts/', include('allauth.urls')),
 ]
