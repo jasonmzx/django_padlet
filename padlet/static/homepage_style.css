@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
+
 .top {
   background-color: rgb(220, 220, 220);
   text-align: center;
@@ -9,4 +11,22 @@
 
 .margin_btm {
 margin-bottom: 1vh; 
+}
+
+.myp_margin {
+  margin-left: 3vw;
+  margin-right: 3vw;
+}
+
+.padlet_list {
+  background-color: rgb(130,130,190);
+  border-radius: 25vh;
+  color: whitesmoke;
+  margin-bottom: 1vh; 
+}
+
+.align_right {
+  float:right;
+  margin-top: 0.7vh;
+  margin-right: 1vw;
 }

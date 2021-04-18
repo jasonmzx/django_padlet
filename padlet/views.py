@@ -4,6 +4,7 @@ from .models import Padlet, profile
 import json
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.http import JsonResponse as JSONREP
 # Create your views here.
 
 def home(request):
@@ -45,4 +46,28 @@ def room(request, room_name):
 
 
 def mypadlets(request):
-    return render(request, 'index.html', {})
+    return render(request, 'mypadlets.html', {})
+
+def createpadlet(request):
+    if request.method == "POST":
+        print("Posted the request")
+
+
+
+    return render(request, 'createpadlet.html', {})
+
+#Search Query for Users based on username.
+def search_user_method(request):
+    #Get Request handler (If user actually tries to access this URL)
+
+
+    searched = request.GET.get('searched')
+    print(searched)
+
+
+    if request.is_ajax():
+        return JSONREP({'s_query': searched}, status=200)
+
+    #Keep this at the bottom:
+    if request.method == "GET":
+        return redirect(index)

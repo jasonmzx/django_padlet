@@ -4,6 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     {% load static %}
+    {% csrf_token %}
     <!-- Use this for mobile devices not to mess with scale -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!--My css sheet-->
@@ -16,17 +17,25 @@
 
 
     <div class="container col-md-12 top">
-      <p class="display-3">Welcome, {{ user.username }}</p>
+      <p class="display-3">Create a padlet!</p>
     </div>
     
-    <div class="container col-md-12 btnz">
-      <button type="button" class="col-md-6 btn btn-primary margin_btm" onclick="location.href='/padlets'">View Padlets i'm in!</button>
-      <button type="button" class="col-md-6 btn btn-success margin_btm" onclick="location.href='/mypadlets'">My Padlets!</button>
-      <button type="button" class="col-md-6 btn btn-warning" onclick="location.href='/padlet/groups'">My Groups! </button>
-    </div>
+  <div class="container col-md-12">
+   <p>Give your padlet a name:</p>   
+    <input placeholder="Here">
+  
+  <p>Search for users!</p>
+  <input id="search_users" placeholder="Search here">
+
+
+  </div>
 
     <!-- Javascript for bootstrap 4, yes including popper js-->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.6.0.js"
+  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+  crossorigin="anonymous"></script>
+    <script src="{% static 'cp_ajax.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>

@@ -20,7 +20,13 @@
     </div>
     
     <div class="container col-md-12 btnz">
-      <button type="button" class="col-md-6 btn btn-primary margin_btm" onclick="location.href='/accounts/login'">Login</button>
+      <button type="button" class="col-md-6 btn btn-primary margin_btm" onclick="location.href='/accounts/login'">
+        {% if user.is_authenticated %}
+          {{user.username}}'s Padlet page
+        {% else %}
+        Login!
+        {% endif %}
+      </button>
       <button type="button" class="col-md-6 btn btn-secondary">About us (coming soon)</button>
     </div>
 

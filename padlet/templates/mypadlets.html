@@ -9,6 +9,7 @@
     <!--My css sheet-->
     <link rel="stylesheet" href="{% static 'homepage_style.css' %}" type="text/css">
     <!-- Bootstrap CSS CDN-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Hello, world!</title>
   </head>
@@ -19,11 +20,37 @@
       <p class="display-3">Welcome, {{ user.username }}</p>
     </div>
     
-    <div class="container col-md-12 btnz">
-      <button type="button" class="col-md-6 btn btn-primary margin_btm" onclick="location.href='/padlets'">View Padlets i'm in!</button>
-      <button type="button" class="col-md-6 btn btn-success margin_btm" onclick="location.href='/mypadlets'">My Padlets!</button>
-      <button type="button" class="col-md-6 btn btn-warning" onclick="location.href='/padlet/groups'">My Groups! </button>
+    <div class="container col-md-12">
+    <!-- Title -->
+    <h2 class="myp_margin">Your padlets;</h2>
+
+    <div class="d-flex flex-column myp_margin">
+        <!-- If no padlets are owned-->
+        <div class="p-2 padlet_list">
+            You currently don't manage any padlets...
+        </div>
+        <!-- Else display padlet list-->
+        <div class="p-2 padlet_list">
+            <i class="fas fa-align-justify"></i>
+            Flex item 2
+            <i class="far fa-trash-alt align_right fa-lg"></i>
+            <i class="far fa-clone align_right fa-lg"></i>
+        </div>
+
+        <div class="p-2 padlet_list">
+            <i class="fas fa-align-justify"></i>
+            Flex item 3
+            <i class="far fa-trash-alt align_right fa-lg"></i>
+            <i class="far fa-clone align_right fa-lg"></i>
+        </div>
     </div>
+
+    <button type="button" class="col-md-6 btn btn-success margin_btm" onclick="location.href='/createpadlet'">Create padlet</button>
+
+    </div>
+
+
+    
 
     <!-- Javascript for bootstrap 4, yes including popper js-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
