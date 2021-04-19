@@ -59,14 +59,22 @@ def createpadlet(request):
 #Search Query for Users based on username.
 def search_user_method(request):
     #Get Request handler (If user actually tries to access this URL)
-
-
-    searched = request.GET.get('searched')
-    print(searched)
-
-
     if request.is_ajax():
-        return JSONREP({'s_query': searched}, status=200)
+        searched = request.GET.get('searched')
+        db_allusers = profile.objects.all().values_list('profile_owner', flat=True)
+        search_query = []
+
+        #SEARCH QUERY:
+        if searched == "":
+            pass
+        else:
+            for user in db_allusers:
+                if len(searched) > len(user):
+                    pass
+                if searched == user[0:len(searched)] and request.user.username != user:
+                    search_query.append(user)
+
+        return JSONREP({'s_query': search_query}, status=200)
 
     #Keep this at the bottom:
     if request.method == "GET":
