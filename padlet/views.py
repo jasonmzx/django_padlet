@@ -71,7 +71,7 @@ def search_user_method(request):
             for user in db_allusers:
                 if len(searched) > len(user):
                     pass
-                if searched == user[0:len(searched)] and request.user.username != user:
+                if searched.lower() == user[0:len(searched)].lower() and request.user.username != user:
                     search_query.append(user)
 
         return JSONREP({'s_query': search_query}, status=200)

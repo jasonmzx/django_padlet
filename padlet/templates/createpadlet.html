@@ -21,16 +21,20 @@
     </div>
     
   <div class="container col-md-12">
-   <p>Give your padlet a name:</p>   
-    <input placeholder="Here">
+   <div class="cp_label">New Padlet Name:</div>   
+    <input class="form-control" placeholder="Give your padlet a name!">
   
-  <p>Search for users!</p>
-  <input id="search_users" placeholder="Search here">
+    <div class="cp_label">Users attending this padlet:</div>   
+   <!--Display of appended users (This will only be saved in a session))-->
+   <div id="appended_users"></div> 
+  <input id="search_users" class="form-control" placeholder="Search for users here!">
   <div id="search_query_obj" class="d-flex flex-column">
-
+  
     
   </div>
 
+  <button id="query_next">Next</button>
+  <button id="query_prev">Prev</button>
   </div>
 
     <!-- Javascript for bootstrap 4, yes including popper js-->

@@ -30,3 +30,15 @@ margin-bottom: 1vh;
   margin-top: 0.7vh;
   margin-right: 1vw;
 }
+
+/*CREATE PADLET CSS CLASSES*/
+
+.cp_label {
+  background-color: rgb(130,130,130);
+  border-radius: 5vh;
+  margin-bottom: 1vh;
+  padding-top: 0.5vh;
+  padding-bottom: 0.5vh;
+  padding-left: 2vw;
+  color: whitesmoke;
+}
