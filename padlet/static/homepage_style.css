@@ -42,3 +42,22 @@ margin-bottom: 1vh;
   padding-left: 2vw;
   color: whitesmoke;
 }
+
+.change_page {
+  display: none;
+}
+
+.s_q_o {
+  background-color: slategray;
+  border-radius: 3vh;
+  margin-top: 1vh;
+}
+
+.queryd_user {
+  background-color: silver;
+  border-radius: 2vh;
+  padding-left: 2vw;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+}
+
