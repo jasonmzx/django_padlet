@@ -61,3 +61,19 @@ margin-bottom: 1vh;
   margin-bottom: 1vh;
 }
 
+#appended_users {
+  background-color: turquoise;
+}
+
+.apd_user {
+  margin: 0.5vw 0.5vw 0.5vw 0.5vw;
+  background-color: deeppink;
+  border-radius: 2vh;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  color: whitesmoke;
+}
+
+.a_p_remove {
+  margin-left: 1vw;
+}

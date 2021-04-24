@@ -10,6 +10,7 @@
     <!--My css sheet-->
     <link rel="stylesheet" href="{% static 'homepage_style.css' %}" type="text/css">
     <!-- Bootstrap CSS CDN-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Hello, world!</title>
   </head>
@@ -24,21 +25,12 @@
    <div class="cp_label">New Padlet Name:</div>   
     <input class="form-control" placeholder="Give your padlet a name!">
   
-    <div class="cp_label">Users attending this padlet:</div>   
+    <div class="cp_label">Padlet Header: (E.x question of the day, math problem)  </div>
    <!--Display of appended users (This will only be saved in a session))-->
-   <div id="appended_users"></div> 
+   <textarea rows="4" cols="50">
+    At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
+    </textarea>
 
-   
-  <input id="search_users" class="form-control" placeholder="Search for users here!">
-  <div id="search_query_obj" class="d-flex flex-column s_q_o">
-  
-    
-  </div>
-  <div class="container col-md-12 btnz change_page">
-  <button id="query_prev" class="btn btn-secondary col-md-5 col-sm-3 c_p_btn"><< Previous</button>
-  <button id="query_next" class="btn btn-secondary col-md-5 col-sm-3 c_p_btn">Next >></button>
-
-</div>
   </div>
 
     <!-- Javascript for bootstrap 4, yes including popper js-->
