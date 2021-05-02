@@ -49,12 +49,15 @@ def mypadlets(request):
     return render(request, 'mypadlets.html', {})
 
 def createpadlet(request):
-    if request.method == "POST":
-        print("Posted the request")
+    if request.user.is_authenticated:
 
+        if request.method == "POST":
+            print("Posted the request")
 
+        return render(request, 'createpadlet.html', {})
 
-    return render(request, 'createpadlet.html', {})
+    else:
+        return redirect('home')
 
 #Search Query for Users based on username.
 def search_user_method(request):
