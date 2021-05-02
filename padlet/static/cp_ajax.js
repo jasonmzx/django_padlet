@@ -74,9 +74,26 @@ function create_wysi_text(customString){
 
     //Adding Event Listener for Text Element(AfterMathElement):
         span_after.addEventListener("click", function(e){
-        console.log(span_after)
+        const current_pos = positionGetter()
+        console.log(current_pos);
         });    
-    
+        
+        span_after.addEventListener("keydown", function(e){
+        var current_pos = 0
+        if (e.key == "ArrowRight"){
+            current_pos = positionGetter() +1
+            //Limits current_pos to MAX LENGTH
+            if (current_pos > span_after.innerHTML.length){current_pos = span_after.innerHTML.length}
+
+        } else if (e.key = "ArrowLeft") {
+            current_pos = positionGetter() -1
+           //Limits Current_pos to MIN LENGTH
+           if (current_pos < 0){current_pos = 0}
+        }
+        console.log(current_pos);
+        })
+
+        //Appending Element into Main DIV
         editor.appendChild(span_after);
     }
 
@@ -175,14 +192,9 @@ function wysi_optimize() {
 
 
 
-function replaceVal(val, step) {
+function positionGetter(val, step) {
     var selection = window.getSelection();
-    console.log(selection);
-    console.log(selection.anchorOffset);
-    console.log(selection.anchorNode.attr("class"))
-    if (selection.anchorNode.nodeName == "#text"){
-        console.log("it's the right one!")
-    }
+    return selection.anchorOffset
 
     // for (var i = 0; i < step; i += 1) {
     //   selection.modify('extend', 'backward', 'character');
