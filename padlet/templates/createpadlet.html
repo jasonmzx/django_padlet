@@ -27,25 +27,41 @@
     <input class="form-control" placeholder="Give your padlet a name!">
   
     <div class="cp_label">Padlet Header: (E.x question of the day, math problem)  </div>
+
+    <!-- EDITOR CONTAINER-->
+    <div class="e_container">
     <!--The menu-->
-    <div>
-      <button id="wysi_text" class="w_elm">Text</button>
-      <button id="wysi_math" class="w_elm">Math</button>
-      <button id="wysi_draw" class="w_elm">draw</button>
-      <button id="wysi_img" class="w_elm">Img</button>
-      <button id="wysi_graph" class="w_elm" onclick="positionGetter()">Graphique</button>
+    <div id="menu_wysiwig">
+      <button id="wysi_text" class="w_elm btn btn-dark">Text</button><br>
+      <button id="wysi_math" class="w_elm btn btn-dark">Math</button><br>
+      <button id="wysi_draw" class="w_elm btn btn-dark">draw</button><br>
+      <button id="wysi_img" class="w_elm btn btn-dark">Img</button><br>
+      <button id="wysi_graph" class="w_elm btn btn-dark" onclick="positionGetter()">Graphique</button><br>
       <br>
       <button id="wysi_tool_resize" onclick="wysi_optimize()">Resize</button>
     </div>
 
-    <div id="math_wysiwig">
-    </div>
-    
+    <div class="vertical_e_cont">
+      <div>
+      <div id="insert_wysiwig" class="insert_box">x</div>
+      </div>
+
+      <div>
+      <div id="math_wysiwig"></div>
+      </div>
+  </div>
 
 
 
 
-    <p>Solve <span id="problem">(ax^2)/4x^e</span>.</p>
+
+
+  </div>
+
+
+
+
+   
 
 
 

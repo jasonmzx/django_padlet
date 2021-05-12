@@ -53,7 +53,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         #Loads Data recieved
         text_data_json = json.loads(text_data)
 
-        #If data being sent to is update a User's panel:
+        #If data being sent, update a User's panel:
         if text_data_json['receive_type'] == "padlet_update":
             print("Padlet Update received!")
             new_padlet_content = [text_data_json['user_id'] , text_data_json['client_panel_content'] ]

@@ -51,6 +51,9 @@ function create_wysi_math() {
         new_eq.setAttribute("class", "math_box")
         new_eq.setAttribute("id", random_id)
 
+        mathEventListener(new_eq);
+
+
         editor.appendChild(new_eq);
         // editor.appendChild(span_after); Keeping this hear to show that there previous was a Text Element appended after the Math Element.
 
@@ -72,26 +75,7 @@ function create_wysi_text(customString){
         span_after.setAttribute("class","text_box");
         span_after.setAttribute("contenteditable","");
 
-    //Adding Event Listener for Text Element(AfterMathElement):
-        span_after.addEventListener("click", function(e){
-        const current_pos = positionGetter()
-        console.log(current_pos);
-        });    
-        
-        span_after.addEventListener("keydown", function(e){
-        var current_pos = 0
-        if (e.key == "ArrowRight"){
-            current_pos = positionGetter() +1
-            //Limits current_pos to MAX LENGTH
-            if (current_pos > span_after.innerHTML.length){current_pos = span_after.innerHTML.length}
-
-        } else if (e.key = "ArrowLeft") {
-            current_pos = positionGetter() -1
-           //Limits Current_pos to MIN LENGTH
-           if (current_pos < 0){current_pos = 0}
-        }
-        console.log(current_pos);
-        })
+        textEventListener(span_after);
 
         //Appending Element into Main DIV
         editor.appendChild(span_after);
@@ -106,7 +90,7 @@ function create_wysi_text(customString){
         } else {
             createTextElement(customString);
         }
-
+    
     } catch(err) {
         createTextElement(customString);
     }
@@ -150,6 +134,38 @@ var mathField = MQ.MathField(mathFieldSpan, {
 });
 }
 
+//Event Listeners
+
+function textEventListener(element) {
+    //Adding Event Listener for Text Element(AfterMathElement):
+    element.addEventListener("click", function(e){
+        const current_pos = positionGetter()
+        console.log(current_pos);
+        insertionMenu(element,element.getAttribute("class"),current_pos)
+        });    
+        
+        element.addEventListener("keydown", function(e){
+        var current_pos = 0
+        if (e.key == "ArrowRight"){
+            current_pos = positionGetter() +1
+            //Limits current_pos to MAX LENGTH
+            if (current_pos > element.innerHTML.length){current_pos = element.innerHTML.length}
+
+        } else if (e.key = "ArrowLeft") {
+            current_pos = positionGetter() -1
+           //Limits Current_pos to MIN LENGTH
+           if (current_pos < 0){current_pos = 0}
+        }
+        insertionMenu(element,element.getAttribute("class"),current_pos)
+        })
+}
+
+function mathEventListener(element){
+    element.addEventListener("click",function(e){
+        insertionMenu(element,element.getAttribute("class"),null)
+    });
+}
+
 
 function wysi_optimize() {
     wysi = $("#math_wysiwig .text_box,.math_box")
@@ -165,11 +181,13 @@ function wysi_optimize() {
                 editor.removeChild(wysi[i])
                 editor.removeChild(wysi[i+1])
 
-                //New combined span element:
+            //New combined span element:
                 var com_elm = document.createElement("span");
                 com_elm.innerHTML = combined_text
                 com_elm.setAttribute("class","text_box");
                 com_elm.setAttribute("contenteditable","");
+
+                textEventListener(com_elm);
 
 
                 if(i == 0){
@@ -189,11 +207,101 @@ function wysi_optimize() {
     console.log(wysi)
 };
 
+document.addEventListener("click", function(e) {
+    const clickedElement = e.target.getAttribute("class")
+    let firstClassGetter = ""
 
+    if (clickedElement != undefined) { 
+        firstClassGetter = clickedElement.split(' ')[0] 
+    }
+
+    console.log(clickedElement)
+
+
+
+    let insertionSend = null
+
+    //Essentially checks if Element is within the class:"math_box" elements, if so it sets insertionSend to the element.
+    if (clickedElement == null){
+        //Searchs for Select_cursor, if exists, set insertion menu to trigger with the element's parent math_box obj
+        const select_cursor = document.getElementsByClassName("mq-cursor")[0]
+        if (select_cursor != undefined){
+        // insertionMenu(select_cursor.closest(".math_box"),"math_box",null)
+        insertionSend = select_cursor.closest(".math_box")
+        }
+        //Else, simply locate parent element
+    } else{
+    console.log(e.target.closest(".math_box"))
+    insertionSend = e.target.closest(".math_box")
+    // insertionMenu(e.target.closest(".math_box"),"math_box",null)
+
+    }
+
+    //Sending the object found from above to the insertionMenu function, which generates the menu
+    if (insertionSend != null){
+        insertionMenu(insertionSend,"math_box",null)
+        firstClassGetter = "bypass"
+    }
+    
+
+
+    //Class Name being referencing in validation 
+
+
+
+    console.log(firstClassGetter);
+    //Class Validation
+    valid_bypass = ["text_box","mq-root-block","mq-hasCursor","math_box","bypass"]
+    if (valid_bypass.includes(firstClassGetter) == false ) {
+        console.log("bypassing")
+        window.getSelection().empty();
+        const menu_element = document.getElementById("insert_wysiwig");
+        menu_element.style.display = "none";
+        console.log(window.getSelection())
+    }
+    //Other Elements that can trigger 
+
+
+})
+
+function insertionMenu(thiselement, element_type, cursor_position){
+    const menu_element = document.getElementById("insert_wysiwig");
+    console.log(`${thiselement} , ${element_type}, ${cursor_position}`)
+    //Insertion Text Menu
+    if (element_type == "text_box"){
+        menu_element.style.backgroundColor = "red";
+        menu_element.style.display = "block";
+        //Creation of the Insertion Menu for Textboxes:
+        $("#insert_wysiwig").empty();
+        const insert_menu = document.querySelector("#insert_wysiwig")
+        
+        //Creation of the Delete button:
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete"
+
+        deleteButton.onclick = function(element){
+            thiselement.remove()
+        }
+
+        insert_menu.appendChild(deleteButton);
+        
+
+    } 
+    const valid_math_box = ["math_box mq-editable-field mq-math-mode mq-focused","math_box"]
+    if (valid_math_box.includes(element_type)){
+        menu_element.style.backgroundColor = "blue";
+        menu_element.style.display = "block";
+
+
+    }
+
+    //element.remove();
+}
 
 
 function positionGetter(val, step) {
     var selection = window.getSelection();
+    console.log(selection)
     return selection.anchorOffset
 
     // for (var i = 0; i < step; i += 1) {

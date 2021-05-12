@@ -77,3 +77,41 @@ margin-bottom: 1vh;
 .a_p_remove {
   margin-left: 1vw;
 }
+
+/* WYSIWIG CSS*/
+#menu_wysiwig {
+  background-color: royalblue;
+  border-radius: 2vh;
+  text-align: center;
+}
+
+.w_elm {
+  width: 75%;
+  text-align: center;
+  margin-top: 3%;
+}
+
+.e_container {
+  display: grid;
+  grid-template-columns: 20% 80%;
+}
+
+.vertical_e_cont {
+  display: grid;
+  grid-template-rows: 15% 85%;
+}
+
+#math_wysiwig {
+  margin: 1% 2% 2% 2%;
+  overflow: auto;
+  border: 1px solid steelblue;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#insert_wysiwig {
+  background-color: red;
+  border-radius: 1vw;
+  margin: 0.2% 1% 0.2% 1%;
+  display: none;
+}
