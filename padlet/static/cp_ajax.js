@@ -28,20 +28,27 @@ $(document).ready(function(){
 
     });
 
+
 //end of JQUERY    
+
 });
 
 var MQ = MathQuill.getInterface(2);
-var problemSpan = document.getElementById('problem');
-MQ.StaticMath(problemSpan);
+//var problemSpan = document.getElementById('problem');
+//MQ.StaticMath(problemSpan);
 
 
 //Defining WYSIWIG Elements
 const w_elm = document.querySelectorAll(".w_elm");
 
-const text_button = document.querySelector("#wysi_text");
+//const text_button = document.querySelector("#wysi_text");
 
 const editor = document.querySelector("#math_wysiwig")
+
+//CURRENTLY SELECTED ELEMENT GLOBAL VARIABLE
+// 0: class , 1: reference to element itself
+let currentlySelectedElm = ['',null]
+
 
 //Creation of the Math Element 
 function create_wysi_math() {
@@ -53,9 +60,34 @@ function create_wysi_math() {
 
         mathEventListener(new_eq);
 
-
+        const current_pos = positionGetter()
+        console.log("[c_math]:"+current_pos)
+        //If no specific position is selected, append NEW_EQ element (to the end)
+        //if (current_pos == 0){
+        if (currentlySelectedElm[1] == null){
         editor.appendChild(new_eq);
-        // editor.appendChild(span_after); Keeping this hear to show that there previous was a Text Element appended after the Math Element.
+        } else {
+            console.log("[c_math]:"+currentlySelectedElm);
+            //Currently selected Element Split (Based on length and current position of cursor element within CSE)
+            const CSE_split = [currentlySelectedElm[1].innerHTML.slice(0,current_pos) ,
+                             currentlySelectedElm[1].innerHTML.slice(current_pos,currentlySelectedElm[1].innerHTML.length) ]
+            console.log("[c_math]:"+CSE_split)
+            
+            //Creation / manipulation of elements to fit MATH_BOX in the middle of previous text:
+            currentlySelectedElm[1].innerHTML = CSE_split[0]
+            $(new_eq).insertAfter(currentlySelectedElm[1])
+            
+            //Second part of split text:
+            let span_after = document.createElement("span")
+            span_after.innerHTML = CSE_split[1]
+            span_after.setAttribute("class","text_box");
+            span_after.setAttribute("contenteditable","");
+            textEventListener(span_after);
+
+            $(span_after).insertAfter(new_eq)
+
+        }
+        // editor.appendChild(span_after); Keeping this here to show that there previous was a Text Element appended after the Math Element.
 
         run_mq(random_id)    
 }
@@ -65,10 +97,10 @@ function create_wysi_text(customString){
     
     function createTextElement(customString){
         //Text Element:
-        var span_after = document.createElement("span")
+        let span_after = document.createElement("span")
         //Usage of customString to dynamically create default text elements E.G -> (Type math here:)
         if(customString == undefined){
-            span_after.innerHTML = "c";
+            span_after.innerHTML = "Insert text here...";
        } else {
            span_after.innerHTML = customString;
        }
@@ -78,6 +110,7 @@ function create_wysi_text(customString){
         textEventListener(span_after);
 
         //Appending Element into Main DIV
+
         editor.appendChild(span_after);
     }
 
@@ -98,9 +131,27 @@ function create_wysi_text(customString){
 
 };
 
+//Creation of Image Element:
+function create_wysi_img(){
+    const menu_element = document.getElementById("insert_wysiwig");
+    menu_element.style.backgroundColor = "pink";
+    menu_element.style.display = "block";
+    $("#insert_wysiwig").empty();
+    //Creation of Image insertion menu:
+    
+    //URL tab
+    $("#insert_wysiwig").append(`
+    <span class="insert_box" >Link:</span><input id="img_input" class="insert_box" onchange="img_input(this.id)"></input> <br>
+    <span class="insert_box" >Or, upload the image file here:</span>  <input type="file" id="img_input_upload" onchange="img_input(this.id)" class="insert_box" name="img" accept="image/*">`)
+    document.getElementById("vert_cont").style.gridTemplateRows = "40% 60%"
+}
+
+
 
 //DEFAULT SETTINGS OF THE WYSIWIG's INPUT
 create_wysi_text("Type math here!");
+
+
 
 //Create box
 for (const w of w_elm) {
@@ -111,6 +162,10 @@ for (const w of w_elm) {
         
         if(w.id == "wysi_text"){
             create_wysi_text();
+        }
+
+        if(w.id == "wysi_img"){
+            create_wysi_img();
         }
     
     });
@@ -135,12 +190,38 @@ var mathField = MQ.MathField(mathFieldSpan, {
 }
 
 //Event Listeners
+function img_input(e){
+
+    if (e == "img_input"){
+    let url = document.querySelector("#img_input").value 
+    try{ 
+        url = new URL(url);
+        console.log("[II]: Valid URL")
+        return url
+    } catch(_){
+        console.log("[II]: URL is invalid...")
+        return false
+     }
+    } else {
+        const img_file_upload = document.querySelector("#img_input_upload").files[0];
+        console.log(img_file_upload);
+        
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        console.log(toBase64(img_file_upload));
+    }
+
+}
 
 function textEventListener(element) {
     //Adding Event Listener for Text Element(AfterMathElement):
     element.addEventListener("click", function(e){
         const current_pos = positionGetter()
-        console.log(current_pos);
         insertionMenu(element,element.getAttribute("class"),current_pos)
         });    
         
@@ -207,6 +288,7 @@ function wysi_optimize() {
     console.log(wysi)
 };
 
+//Global event listener:
 document.addEventListener("click", function(e) {
     const clickedElement = e.target.getAttribute("class")
     let firstClassGetter = ""
@@ -243,7 +325,10 @@ document.addEventListener("click", function(e) {
         firstClassGetter = "bypass"
     }
     
-
+    //CurrentlySelectedElm setter
+    if(firstClassGetter == "text_box"){
+        currentlySelectedElm = ["text_box",e.target]
+    }
 
     //Class Name being referencing in validation 
 
@@ -251,9 +336,12 @@ document.addEventListener("click", function(e) {
 
     console.log(firstClassGetter);
     //Class Validation
-    valid_bypass = ["text_box","mq-root-block","mq-hasCursor","math_box","bypass"]
+    valid_bypass = ["text_box","mq-root-block","mq-hasCursor","math_box","bypass","insert_box","wysi_img"]
     if (valid_bypass.includes(firstClassGetter) == false ) {
-        console.log("bypassing")
+        document.getElementById("vert_cont").style.gridTemplateRows = "15% 85%"
+        console.log("No bypass, clearing insertion Menu")
+        //resetting currentlySelectedElm to null
+        currentlySelectedElm = ['',null]
         window.getSelection().empty();
         const menu_element = document.getElementById("insert_wysiwig");
         menu_element.style.display = "none";
@@ -268,12 +356,14 @@ function insertionMenu(thiselement, element_type, cursor_position){
     const menu_element = document.getElementById("insert_wysiwig");
     console.log(`${thiselement} , ${element_type}, ${cursor_position}`)
     //Insertion Text Menu
+    const insert_menu = document.querySelector("#insert_wysiwig");
+
     if (element_type == "text_box"){
         menu_element.style.backgroundColor = "red";
         menu_element.style.display = "block";
         //Creation of the Insertion Menu for Textboxes:
         $("#insert_wysiwig").empty();
-        const insert_menu = document.querySelector("#insert_wysiwig")
+
         
         //Creation of the Delete button:
         const deleteButton = document.createElement("button");
@@ -291,7 +381,17 @@ function insertionMenu(thiselement, element_type, cursor_position){
     if (valid_math_box.includes(element_type)){
         menu_element.style.backgroundColor = "blue";
         menu_element.style.display = "block";
+        $("#insert_wysiwig").empty();
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete"
 
+        deleteButton.onclick = function(element){
+            thiselement.remove()
+            wysi_optimize()
+        }
+
+        insert_menu.appendChild(deleteButton);
+        
 
     }
 
