@@ -96,6 +96,11 @@ margin-bottom: 1vh;
   grid-template-columns: 20% 80%;
 }
 
+.img_menu_container{
+  display: grid;
+  grid-template-columns: 75% 25%;
+}
+
 .vertical_e_cont {
   display: grid;
   grid-template-rows: 20% 80%;

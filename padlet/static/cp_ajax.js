@@ -131,8 +131,8 @@ function create_wysi_text(customString){
 
 };
 
-//Creation of Image Element:
-function create_wysi_img(){
+//Creation of Image Element's Menu:
+function create_wysi_img_menu(){
     const menu_element = document.getElementById("insert_wysiwig");
     menu_element.style.backgroundColor = "pink";
     menu_element.style.display = "block";
@@ -141,11 +141,28 @@ function create_wysi_img(){
     
     //URL tab
     $("#insert_wysiwig").append(`
-    <span class="insert_box" >Link:</span><input id="img_input" class="insert_box" onchange="img_input(this.id)"></input> <br>
-    <span class="insert_box" >Or, upload the image file here:</span>  <input type="file" id="img_input_upload" onchange="img_input(this.id)" class="insert_box" name="img" accept="image/*">`)
+    <div class="insert_box img_menu_container">
+    <div class="insert_box"> 
+    <div id="url_input" class="insert_box">
+    <span class="insert_box" >Link:</span><input id="img_input" class="insert_box" oninput="img_input(this.id)"></input> <br>
+    </div>
+    <div id="upload_input" class="insert_box">
+    <span class="insert_box" >Or, upload the image file here:</span>  <input type="file" id="img_input_upload" onchange="img_input(this.id)" class="insert_box" name="img" accept="image/*">
+    </div>
+    </div>
+    <div class="insert_box"><button id= "img_upload_submit" style="display:none;">Upload</button></div>
+    </div>
+    `)
     document.getElementById("vert_cont").style.gridTemplateRows = "40% 60%"
 }
 
+function create_wysi_img(i_url){
+    let new_eq = document.createElement("img");
+    new_eq.src = i_url
+    new_eq.width = "500"
+    new_eq.height = "500"
+    editor.appendChild(new_eq);
+}
 
 
 //DEFAULT SETTINGS OF THE WYSIWIG's INPUT
@@ -165,7 +182,7 @@ for (const w of w_elm) {
         }
 
         if(w.id == "wysi_img"){
-            create_wysi_img();
+            create_wysi_img_menu();
         }
     
     });
@@ -189,35 +206,86 @@ var mathField = MQ.MathField(mathFieldSpan, {
 });
 }
 
-//Event Listeners
-function img_input(e){
+// Image Input Menu:
 
+//Upload: Type, Content
+let ImgUpload = [null,null]
+
+function img_input(e){
+        //option: If the URL or Uploaded IMAGE is valid.. (true if valid)
+        //type_of: Which one is valid, URL or upload? (true if URL, false if upload)
+    function img_upload_toggle(option, type_of){
+        //Element being used:
+        let upload_button = document.querySelector("#img_upload_submit");
+        let url_input =  document.querySelector("#url_input")
+        let upload_input = document.querySelector("#upload_input")
+        //conditions
+        if(option == true){upload_button.style.display = "block"} else {upload_button.style.display = "none"}
+        if(type_of == null){
+            url_input.style.display = "block"
+            upload_input.style.display = "block"
+        } else if(type_of == true) {
+            url_input.style.display = "block"
+            upload_input.style.display = "none"
+        } else if(type_of == false){
+            url_input.style.display = "none"
+            upload_input.style.display = "block"
+        }
+    }
+
+    // If input is URL
     if (e == "img_input"){
     let url = document.querySelector("#img_input").value 
     try{ 
         url = new URL(url);
         console.log("[II]: Valid URL")
+        img_upload_toggle(true, true);
+        ImgUpload = ["URL", url]
+        console.log(`[IU_test]:${ImgUpload}`)
         return url
     } catch(_){
         console.log("[II]: URL is invalid...")
+        img_upload_toggle(false, null)
+        ImgUpload = [null,null]
         return false
      }
+    // If input is File UPLOAD
     } else {
         const img_file_upload = document.querySelector("#img_input_upload").files[0];
         console.log(img_file_upload);
         
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
+            console.log(`File reading: ${file} `)
+            //Checking if File isn't undefined:
+            if (file == undefined){
+                console.log("My file is undefined")
+                img_upload_toggle(false, null);
+                ImgUpload = [null,null]
+            } else {
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    resolve(reader.result);
+                    img_upload_toggle(true, false);
+                    ImgUpload = ["Upload",reader.result]
+                    console.log(`[IU_test]:${ImgUpload}`)
+               }
+            }
+            // this isn't really useful anymore because i check for undefined at the start of promise
+            // reader.onerror = error => {
+            //     reject(error);
+            // }
+
         });
+
 
         console.log(toBase64(img_file_upload));
     }
 
 }
 
+
+//Event Listeners
 function textEventListener(element) {
     //Adding Event Listener for Text Element(AfterMathElement):
     element.addEventListener("click", function(e){
@@ -291,6 +359,7 @@ function wysi_optimize() {
 //Global event listener:
 document.addEventListener("click", function(e) {
     const clickedElement = e.target.getAttribute("class")
+    const clickedElementID = e.target.getAttribute("id")
     let firstClassGetter = ""
 
     if (clickedElement != undefined) { 
@@ -328,6 +397,13 @@ document.addEventListener("click", function(e) {
     //CurrentlySelectedElm setter
     if(firstClassGetter == "text_box"){
         currentlySelectedElm = ["text_box",e.target]
+    }
+
+    //If it's upload btn:
+    if(clickedElementID == "img_upload_submit"){
+        console.log("*****")
+        console.log(ImgUpload[1])
+        create_wysi_img(ImgUpload[1])
     }
 
     //Class Name being referencing in validation 
